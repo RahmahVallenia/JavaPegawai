@@ -42,9 +42,11 @@ public class FormDivisi extends javax.swing.JFrame {
     private void kosong(){
         txtiddivisi.setText(null);
         txtnamadivisi.setText(null);
-        txthonordivisi.setText(null);          
+        txthonordivisi.setText(null);
+        txtiddivisi.setEditable(true); 
+        txtiddivisi.requestFocus();
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -65,7 +67,7 @@ public class FormDivisi extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel1.setBackground(new java.awt.Color(255, 153, 0));
 
         txtiddivisi.setName("txtiddivisi"); // NOI18N
         txtiddivisi.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +101,11 @@ public class FormDivisi extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabeldivisi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabeldivisiMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabeldivisi);
 
         jButton1.setText("Tambah");
@@ -219,7 +226,7 @@ public class FormDivisi extends javax.swing.JFrame {
     }//GEN-LAST:event_txtnamadivisiActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-                 try {
+        try {
             String sql = "INSERT INTO divisi VALUES ('"+txtiddivisi.getText()+"',"
                     + "'"+txtnamadivisi.getText()+"','"+txthonordivisi.getText()+"')";
             java.sql.Connection conn=(Connection)config.configDB();
@@ -231,49 +238,86 @@ public class FormDivisi extends javax.swing.JFrame {
         }
         load_table();
         kosong();
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-                //Edit Data
-         try {
-            String sql ="UPDATE divisi SET id_divisi = '"+txtiddivisi.getText()+"', "
-                    + "nama_divisi = '"+txtnamadivisi.getText()+"', "
-                    + "honor_divisi = '"+txthonordivisi.getText()+"' WHERE id_divisi = '"+txtiddivisi.getText()+"'";
-            java.sql.Connection conn=(Connection)config.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-            pst.execute();
-            JOptionPane.showMessageDialog(null, "data berhasil di edit");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Perubahan Data Gagal"+e.getMessage());
-        }
+        try {
+        String sql = "UPDATE divisi SET nama_divisi = '" + txtnamadivisi.getText() + "', "
+                + "honor_divisi = '" + txthonordivisi.getText() + "' "
+                + "WHERE id_divisi = '" + txtiddivisi.getText() + "'";
+        
+        java.sql.Connection conn = (Connection) config.configDB();
+        java.sql.PreparedStatement pst = conn.prepareStatement(sql);
+        pst.execute();
+        
+        JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
         load_table();
         kosong();
+        
+    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+        JOptionPane.showMessageDialog(this, 
+            "Gagal Update: Perubahan ID tidak diizinkan karena data sedang digunakan oleh tabel Pegawai.", 
+            "Kesalahan Relasi Data", 
+            JOptionPane.ERROR_MESSAGE);
+            
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Perubahan Data Gagal: " + e.getMessage());
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-                // fungsi hapus data
+    // Konfirmasi sebelum menghapus
+    int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin menghapus data ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
         try {
-            String sql ="delete from divisi where id_divisi='"+txtiddivisi.getText()+"'";
-            java.sql.Connection conn=(Connection)config.configDB();
-            java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+            String sql = "DELETE FROM divisi WHERE id_divisi='" + txtiddivisi.getText() + "'";
+            java.sql.Connection conn = (Connection) config.configDB();
+            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
             pst.execute();
-            JOptionPane.showMessageDialog(this, "berhasil di hapus");
+            
+            JOptionPane.showMessageDialog(this, "Data Berhasil Dihapus");
+            load_table();
+            kosong();
+            
+        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+            // Error ini muncul jika ID Divisi masih dipakai di tabel Pegawai
+            JOptionPane.showMessageDialog(this, 
+                "Gagal Menghapus: Divisi ini masih memiliki pegawai.\n" +
+                "Silakan hapus atau pindahkan data pegawai di divisi ini terlebih dahulu.", 
+                "Kesalahan Relasi Data", 
+                JOptionPane.ERROR_MESSAGE);
+                
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            // Menangkap error umum lainnya
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-        load_table();
-        kosong();
+    }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new FormMenu().setVisible(true);
-        dispose();
+        int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin keluar?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            new FormMenu().setVisible(true);
+            this.dispose();
+        } 
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void txthonordivisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthonordivisiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txthonordivisiActionPerformed
+
+    private void tabeldivisiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabeldivisiMouseClicked
+        int baris = tabeldivisi.rowAtPoint(evt.getPoint());
+    
+        String id = tabeldivisi.getValueAt(baris, 0).toString();
+        txtiddivisi.setText(id);
+        String nama = tabeldivisi.getValueAt(baris, 1).toString();
+        txtnamadivisi.setText(nama);
+        String honor = tabeldivisi.getValueAt(baris, 2).toString();
+        txthonordivisi.setText(honor);
+        txtiddivisi.setEditable(false);
+    }//GEN-LAST:event_tabeldivisiMouseClicked
 
     /**
      * @param args the command line arguments

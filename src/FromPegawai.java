@@ -16,11 +16,18 @@ public class FromPegawai extends javax.swing.JFrame {
     public FromPegawai() {
     initComponents();
     try {
-            connection = config.configDB();
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Connection Failed: " + e.getMessage());
-        }
+        connection = config.configDB();
+        statement = connection.createStatement();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Connection Failed: " + e.getMessage());
+    }
+
+    // Inisialisasi ComboBox Filter
+    comboTableColumns.removeAllItems();
+    comboTableColumns.addItem("id_pegawai");
+    comboTableColumns.addItem("nama");
+    comboTableColumns.addItem("alamat");
+    comboTableColumns.addItem("id_divisi");
 
     loadData();
     kosong();
@@ -199,6 +206,11 @@ public class FromPegawai extends javax.swing.JFrame {
                 comboTableColumnsActionPerformed(evt);
             }
         });
+        comboTableColumns.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                comboTableColumnsKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -337,40 +349,45 @@ public class FromPegawai extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
         String sql = "INSERT INTO pegawai (id_pegawai, id_divisi, id_jabatan, nama, alamat, usia) "
-                + "VALUES ('" + IdPegawai.getText() + "', '"
-                + IdDivisi.getText() + "', '"
-                + IdJabatan.getText() + "', '"
-                + nama.getText() + "', '"
-                + alamat.getText() + "', '"
-                + usia.getText() + "')";
-        PreparedStatement preparedStatement = connection.prepareCall(sql);
-        preparedStatement.execute();
-        JOptionPane.showMessageDialog(null, "Data berhasil ditambahkan");
-
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+        java.sql.PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, IdPegawai.getText());
+        pst.setString(2, IdDivisi.getText());
+        pst.setString(3, IdJabatan.getText());
+        pst.setString(4, nama.getText());
+        pst.setString(5, alamat.getText());
+        pst.setString(6, usia.getText());
+        
+        pst.execute();
+        JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
         loadData();
         kosong();
+    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+        JOptionPane.showMessageDialog(this, "Gagal Simpan: ID Divisi atau ID Jabatan tidak ditemukan di database!", "Error Relasi", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         try {
-        String sql = "UPDATE pegawai "
-                + "SET id_divisi='" + IdDivisi.getText() + "', "
-                + "id_jabatan='" + IdJabatan.getText() + "', "
-                + "nama='" + nama.getText() + "', "
-                + "alamat='" + alamat.getText() + "', "
-                + "usia='" + usia.getText() + "' "
-                + "WHERE id_pegawai='" + IdPegawai.getText() + "'";
-        PreparedStatement preparedStatement = connection.prepareCall(sql);
-        preparedStatement.execute();
-        JOptionPane.showMessageDialog(null, "Data berhasil diubah");
-
+        try {
+        String sql = "UPDATE pegawai SET id_divisi=?, id_jabatan=?, nama=?, alamat=?, usia=? WHERE id_pegawai=?";
+        java.sql.PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, IdDivisi.getText());
+        pst.setString(2, IdJabatan.getText());
+        pst.setString(3, nama.getText());
+        pst.setString(4, alamat.getText());
+        pst.setString(5, usia.getText());
+        pst.setString(6, IdPegawai.getText());
+        
+        pst.execute();
+        JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
         loadData();
         kosong();
+    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+        JOptionPane.showMessageDialog(this, "Gagal Update: Periksa kembali ID Divisi/Jabatan. Pastikan data tersebut ada.", "Error Relasi", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -393,9 +410,44 @@ try {
     }//GEN-LAST:event_comboTableColumnsActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new FormMenu().setVisible(true);
-        dispose();
+       int confirm = JOptionPane.showConfirmDialog(this, "Yakin ingin keluar?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            new FormMenu().setVisible(true);
+            this.dispose();
+        } 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void comboTableColumnsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboTableColumnsKeyReleased
+                                       
+    DefaultTableModel tableModel = new DefaultTableModel();
+    tableModel.addColumn("ID PEGAWAI");
+    tableModel.addColumn("ID DIVISI");
+    tableModel.addColumn("ID JABATAN");
+    tableModel.addColumn("NAMA");
+    tableModel.addColumn("ALAMAT");
+    tableModel.addColumn("USIA");
+
+    try {
+        String cari = fieldfilter.getText();
+        String kolom = comboTableColumns.getSelectedItem().toString();
+        String sql = "SELECT * FROM pegawai WHERE " + kolom + " LIKE '%" + cari + "%'";
+        
+        ResultSet result = statement.executeQuery(sql);
+        while (result.next()) {
+            tableModel.addRow(new String[] {
+                result.getString("id_pegawai"),
+                result.getString("id_divisi"),
+                result.getString("id_jabatan"),
+                result.getString("nama"),
+                result.getString("alamat"),
+                result.getString("usia")
+            });
+        }
+        tablepegawai.setModel(tableModel);
+    } catch (SQLException e) {
+        System.out.println("Error Pencarian: " + e.getMessage());
+    }
+    }//GEN-LAST:event_comboTableColumnsKeyReleased
 
     /**
      * @param args the command line arguments
