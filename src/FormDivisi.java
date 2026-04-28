@@ -253,12 +253,6 @@ public class FormDivisi extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
         load_table();
         kosong();
-        
-    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
-        JOptionPane.showMessageDialog(this, 
-            "Gagal Update: Perubahan ID tidak diizinkan karena data sedang digunakan oleh tabel Pegawai.", 
-            "Kesalahan Relasi Data", 
-            JOptionPane.ERROR_MESSAGE);
             
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Perubahan Data Gagal: " + e.getMessage());
@@ -308,15 +302,15 @@ public class FormDivisi extends javax.swing.JFrame {
     }//GEN-LAST:event_txthonordivisiActionPerformed
 
     private void tabeldivisiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabeldivisiMouseClicked
-        int baris = tabeldivisi.rowAtPoint(evt.getPoint());
-    
-        String id = tabeldivisi.getValueAt(baris, 0).toString();
-        txtiddivisi.setText(id);
-        String nama = tabeldivisi.getValueAt(baris, 1).toString();
-        txtnamadivisi.setText(nama);
-        String honor = tabeldivisi.getValueAt(baris, 2).toString();
-        txthonordivisi.setText(honor);
-        txtiddivisi.setEditable(false);
+//        int baris = tabeldivisi.rowAtPoint(evt.getPoint());
+//    
+//        String id = tabeldivisi.getValueAt(baris, 0).toString();
+//        txtiddivisi.setText(id);
+//        String nama = tabeldivisi.getValueAt(baris, 1).toString();
+//        txtnamadivisi.setText(nama);
+//        String honor = tabeldivisi.getValueAt(baris, 2).toString();
+//        txthonordivisi.setText(honor);
+//        txtiddivisi.setEditable(false);
     }//GEN-LAST:event_tabeldivisiMouseClicked
 
     /**

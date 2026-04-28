@@ -327,28 +327,28 @@ public class FormJabatan extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int baris = jTable1.rowAtPoint(evt.getPoint());
-    
-    String id = jTable1.getValueAt(baris, 1).toString();
-    txtid.setText(id);
-    
-    String jab = jTable1.getValueAt(baris, 2).toString();
-    txtJabatan.setText(jab);
-    
-    String gaji = jTable1.getValueAt(baris, 3).toString();
-    txtGajipk.setText(gaji);
-    
-    String tunj_jab = jTable1.getValueAt(baris, 4).toString();
-    txtJab.setText(tunj_jab);
-    
-    String tunj_anak = jTable1.getValueAt(baris, 5).toString();
-    txtAnk.setText(tunj_anak);
-    
-    String tunj_kes = jTable1.getValueAt(baris, 6).toString();
-    txtKsht.setText(tunj_kes);
-    
-    String perj_dns = jTable1.getValueAt(baris, 7).toString();
-    txtDns.setText(perj_dns);
+//   int baris = jTable1.rowAtPoint(evt.getPoint());
+//    
+//    String id = jTable1.getValueAt(baris, 1).toString();
+//    txtid.setText(id);
+//    
+//    String jab = jTable1.getValueAt(baris, 2).toString();
+//    txtJabatan.setText(jab);
+//    
+//    String gaji = jTable1.getValueAt(baris, 3).toString();
+//    txtGajipk.setText(gaji);
+//    
+//    String tunj_jab = jTable1.getValueAt(baris, 4).toString();
+//    txtJab.setText(tunj_jab);
+//    
+//    String tunj_anak = jTable1.getValueAt(baris, 5).toString();
+//    txtAnk.setText(tunj_anak);
+//    
+//    String tunj_kes = jTable1.getValueAt(baris, 6).toString();
+//    txtKsht.setText(tunj_kes);
+//    
+//    String perj_dns = jTable1.getValueAt(baris, 7).toString();
+//    txtDns.setText(perj_dns);
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed

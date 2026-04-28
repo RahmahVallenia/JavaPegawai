@@ -22,13 +22,12 @@ public class FromPegawai extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Connection Failed: " + e.getMessage());
     }
 
-    // Inisialisasi ComboBox Filter
-    comboTableColumns.removeAllItems();
-    comboTableColumns.addItem("id_pegawai");
-    comboTableColumns.addItem("nama");
-    comboTableColumns.addItem("alamat");
-    comboTableColumns.addItem("id_divisi");
-
+//    // Inisialisasi ComboBox Filter
+//    comboTableColumns.removeAllItems();
+//    comboTableColumns.addItem("id_pegawai");
+//    comboTableColumns.addItem("nama");
+//    comboTableColumns.addItem("alamat");
+//    comboTableColumns.addItem("id_divisi");
     loadData();
     kosong();
     }
@@ -337,13 +336,13 @@ public class FromPegawai extends javax.swing.JFrame {
     }//GEN-LAST:event_usiaActionPerformed
 
     private void tablepegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablepegawaiMouseClicked
-         int row = tablepegawai.rowAtPoint(evt.getPoint());
-    IdPegawai.setText(tablepegawai.getValueAt(row, 0).toString());
-    IdDivisi.setText(tablepegawai.getValueAt(row, 1).toString());
-    IdJabatan.setText(tablepegawai.getValueAt(row, 2).toString());
-    nama.setText(tablepegawai.getValueAt(row, 3).toString());
-    alamat.setText(tablepegawai.getValueAt(row, 4).toString());
-    usia.setText(tablepegawai.getValueAt(row, 5).toString());
+//         int row = tablepegawai.rowAtPoint(evt.getPoint());
+//    IdPegawai.setText(tablepegawai.getValueAt(row, 0).toString());
+//    IdDivisi.setText(tablepegawai.getValueAt(row, 1).toString());
+//    IdJabatan.setText(tablepegawai.getValueAt(row, 2).toString());
+//    nama.setText(tablepegawai.getValueAt(row, 3).toString());
+//    alamat.setText(tablepegawai.getValueAt(row, 4).toString());
+//    usia.setText(tablepegawai.getValueAt(row, 5).toString());
     }//GEN-LAST:event_tablepegawaiMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -362,8 +361,6 @@ public class FromPegawai extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
         loadData();
         kosong();
-    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
-        JOptionPane.showMessageDialog(this, "Gagal Simpan: ID Divisi atau ID Jabatan tidak ditemukan di database!", "Error Relasi", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
@@ -384,8 +381,6 @@ public class FromPegawai extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Data Berhasil Diperbarui");
         loadData();
         kosong();
-    } catch (java.sql.SQLIntegrityConstraintViolationException e) {
-        JOptionPane.showMessageDialog(this, "Gagal Update: Periksa kembali ID Divisi/Jabatan. Pastikan data tersebut ada.", "Error Relasi", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
@@ -419,34 +414,34 @@ try {
 
     private void comboTableColumnsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboTableColumnsKeyReleased
                                        
-    DefaultTableModel tableModel = new DefaultTableModel();
-    tableModel.addColumn("ID PEGAWAI");
-    tableModel.addColumn("ID DIVISI");
-    tableModel.addColumn("ID JABATAN");
-    tableModel.addColumn("NAMA");
-    tableModel.addColumn("ALAMAT");
-    tableModel.addColumn("USIA");
-
-    try {
-        String cari = fieldfilter.getText();
-        String kolom = comboTableColumns.getSelectedItem().toString();
-        String sql = "SELECT * FROM pegawai WHERE " + kolom + " LIKE '%" + cari + "%'";
-        
-        ResultSet result = statement.executeQuery(sql);
-        while (result.next()) {
-            tableModel.addRow(new String[] {
-                result.getString("id_pegawai"),
-                result.getString("id_divisi"),
-                result.getString("id_jabatan"),
-                result.getString("nama"),
-                result.getString("alamat"),
-                result.getString("usia")
-            });
-        }
-        tablepegawai.setModel(tableModel);
-    } catch (SQLException e) {
-        System.out.println("Error Pencarian: " + e.getMessage());
-    }
+//    DefaultTableModel tableModel = new DefaultTableModel();
+//    tableModel.addColumn("ID PEGAWAI");
+//    tableModel.addColumn("ID DIVISI");
+//    tableModel.addColumn("ID JABATAN");
+//    tableModel.addColumn("NAMA");
+//    tableModel.addColumn("ALAMAT");
+//    tableModel.addColumn("USIA");
+//
+//    try {
+//        String cari = fieldfilter.getText();
+//        String kolom = comboTableColumns.getSelectedItem().toString();
+//        String sql = "SELECT * FROM pegawai WHERE " + kolom + " LIKE '%" + cari + "%'";
+//        
+//        ResultSet result = statement.executeQuery(sql);
+//        while (result.next()) {
+//            tableModel.addRow(new String[] {
+//                result.getString("id_pegawai"),
+//                result.getString("id_divisi"),
+//                result.getString("id_jabatan"),
+//                result.getString("nama"),
+//                result.getString("alamat"),
+//                result.getString("usia")
+//            });
+//        }
+//        tablepegawai.setModel(tableModel);
+//    } catch (SQLException e) {
+//        System.out.println("Error Pencarian: " + e.getMessage());
+//    }
     }//GEN-LAST:event_comboTableColumnsKeyReleased
 
     /**
